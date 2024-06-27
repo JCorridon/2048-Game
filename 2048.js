@@ -98,7 +98,48 @@ document.addEventListener('keyup', (e) => {
         setTwo();
     }
     document.getElementById("score").innerText = score;
+    if (checkLoss()) {
+        alert("You have lost the game please try again")
+    }
 })
+
+function checkLoss() {
+
+    // Check for any empty cells
+    for (let r = 0; r < rows; r++) {
+        for (let c = 0; c < columns; c++) {
+            if (board[r][c] === 0) {
+                console.log(`Empty cell found at (${r}, ${c})`);
+                return false; // There is at least one empty cell
+            }
+        }
+    }
+
+    // Check for any possible merges horizontally
+    for (let r = 0; r < rows; r++) {
+        for (let c = 0; c < columns - 1; c++) {
+            if (board[r][c] === board[r][c + 1]) {
+                console.log(`Possible horizontal merge at (${r}, ${c}) and (${r}, ${c + 1})`);
+                return false; // There is a possible horizontal merge
+            }
+        }
+    }
+
+    // Check for any possible merges vertically
+    for (let c = 0; c < columns; c++) {
+        for (let r = 0; r < rows - 1; r++) {
+            if (board[r][c] === board[r + 1][c]) {
+                console.log(`Possible vertical merge at (${r}, ${c}) and (${r + 1}, ${c})`);
+                return false; // There is a possible vertical merge
+            }
+        }
+    }
+
+    // If no empty cells and no possible merges, the game is over
+    console.log("No empty cells or possible merges - Game over");
+    return true;
+
+}
 
 function filterZero(row) {
     return row.filter(num => num != 0);
@@ -162,7 +203,7 @@ function slideUp() {
         board[2][c] = row[2];
         board[3][c] = row[3];
         for (let r = 0; r < rows; r++) {
-            let tile =document.getElementById(r.toString() + '-' + c.toString());
+            let tile = document.getElementById(r.toString() + '-' + c.toString());
             let num = board[r][c];
             updateTile(tile, num);
         }
